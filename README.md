@@ -24,6 +24,10 @@ brew install auto-low-power-macos
 sudo auto-low-power-install
 ```
 
+The tap repository is:
+
+- `wang-yzh/homebrew-auto-low-power-macos`
+
 Install with a custom threshold:
 
 ```bash
