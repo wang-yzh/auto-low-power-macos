@@ -18,8 +18,8 @@ class AutoLowPowerMacos < Formula
   end
 
   test do
-    assert_predicate libexec/"src/auto_low_power_listener.c", :exist?
-    assert_predicate bin/"auto-low-power-install", :exist?
-    assert_predicate bin/"auto-low-power-uninstall", :exist?
+    assert_path_exists libexec/"src/auto_low_power_listener.c"
+    assert_path_exists bin/"auto-low-power-install"
+    assert_path_exists bin/"auto-low-power-uninstall"
   end
 end
