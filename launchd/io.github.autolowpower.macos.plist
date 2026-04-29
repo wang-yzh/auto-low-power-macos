@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>io.github.autolowpower.macos</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Library/Application Support/AutoLowPower/auto-low-power-listener</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>AUTO_LOW_POWER_THRESHOLD</key>
+    <string>__THRESHOLD__</string>
+    <key>AUTO_LOW_POWER_DEBUG</key>
+    <string>__DEBUG__</string>
+  </dict>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardErrorPath</key>
+  <string>/var/log/io.github.autolowpower.macos.log</string>
+  <key>StandardOutPath</key>
+  <string>/var/log/io.github.autolowpower.macos.log</string>
+</dict>
+</plist>
