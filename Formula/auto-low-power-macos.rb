@@ -2,7 +2,7 @@ class AutoLowPowerMacos < Formula
   desc "Event-driven Low Power Mode automation for macOS laptops"
   homepage "https://github.com/wang-yzh/auto-low-power-macos"
   url "https://github.com/wang-yzh/auto-low-power-macos/releases/download/v0.1.0/auto-low-power-macos-v0.1.0.tar.gz"
-  sha256 "72fcf198d6a27df953cf966d8af653bebe6d1d69220b94497d330c4019bbd47f"
+  sha256 "10d93c7f59aafff63daa4ebb5a9680eafae9cfc7319c6efe365e1da2d4b49a46"
   license "MIT"
 
   depends_on :macos
