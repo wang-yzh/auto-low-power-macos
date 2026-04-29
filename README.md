@@ -1,6 +1,10 @@
 # Auto Low Power for macOS
 
+[![CI](https://github.com/wang-yzh/auto-low-power-macos/actions/workflows/ci.yml/badge.svg)](https://github.com/wang-yzh/auto-low-power-macos/actions/workflows/ci.yml)
+
 Event-driven Low Power Mode automation for Mac laptops.
+
+![Auto Low Power demo](assets/demo.svg)
 
 ## What it does
 
@@ -9,6 +13,34 @@ Event-driven Low Power Mode automation for Mac laptops.
 - Always turns Low Power Mode off when AC power is connected.
 
 Default threshold: `25%`
+
+## Install options
+
+### Homebrew tap
+
+```bash
+brew tap wang-yzh/auto-low-power-macos
+brew install auto-low-power-macos
+sudo auto-low-power-install
+```
+
+Install with a custom threshold:
+
+```bash
+sudo AUTO_LOW_POWER_THRESHOLD=30 auto-low-power-install
+```
+
+### One-line install
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/wang-yzh/auto-low-power-macos/main/scripts/quick-install.sh | bash
+```
+
+### From a local clone
+
+```bash
+sudo ./scripts/install.sh
+```
 
 ## Why this project exists
 
@@ -38,22 +70,16 @@ This keeps the behavior event-driven instead of time-polling.
 - macOS laptop with an internal battery
 - administrator access
 
-## Install
-
-```bash
-sudo ./scripts/install.sh
-```
-
-Install with a custom threshold:
-
-```bash
-sudo AUTO_LOW_POWER_THRESHOLD=30 ./scripts/install.sh
-```
-
-Install with verbose debug logging:
+Verbose debug logging:
 
 ```bash
 sudo AUTO_LOW_POWER_DEBUG=1 ./scripts/install.sh
+```
+
+Correction cooldown override:
+
+```bash
+sudo AUTO_LOW_POWER_APPLY_COOLDOWN_SECONDS=1 ./scripts/install.sh
 ```
 
 ## Uninstall
@@ -88,6 +114,26 @@ Daemon log:
 tail -n 50 /var/log/io.github.autolowpower.macos.log
 ```
 
+## Logging
+
+By default, logs are quiet:
+
+- startup matches
+- actual corrections
+- fatal or operational errors
+
+Enable verbose logs with:
+
+```bash
+sudo AUTO_LOW_POWER_DEBUG=1 ./scripts/install.sh
+```
+
+Verbose mode adds:
+
+- raw IOKit event names
+- event snapshots
+- duplicate-correction suppression messages
+
 ## Limitations
 
 - This is macOS-specific.
@@ -96,4 +142,6 @@ tail -n 50 /var/log/io.github.autolowpower.macos.log
 
 ## Repository notes
 
-This repository contains source code and install scripts only. It does not ship a prebuilt binary.
+This repository contains source code, install scripts, CI, packaging, and Homebrew tap metadata.
+
+Release archives are built from tagged source and can be installed through the quick-install path.

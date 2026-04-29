@@ -31,6 +31,11 @@ static io_service_t gManagerService = IO_OBJECT_NULL;
 static char gPowerPlistPath[PATH_MAX] = {0};
 static int gThreshold = 25;
 static bool gDebug = false;
+static double gApplyCooldownSeconds = 3.0;
+static bool gHasRecentApply = false;
+static int gRecentDesiredBatteryMode = -1;
+static int gRecentDesiredACMode = -1;
+static CFAbsoluteTime gRecentApplyAt = 0;
 
 static void log_message(const char *level, const char *message) {
   fprintf(stderr, "[%s] %s: %s\n", kProgram, level, message);
@@ -87,6 +92,28 @@ static void log_correction(
     actualBatteryMode,
     desiredBatteryMode,
     actualACMode
+  );
+  fflush(stderr);
+}
+
+static void log_duplicate_skip(
+  const char *reason,
+  int batteryPercent,
+  bool externalConnected,
+  int desiredBatteryMode
+) {
+  if (!gDebug) {
+    return;
+  }
+
+  fprintf(
+    stderr,
+    "[%s] debug: skipped duplicate correction after %s source=%s battery=%d%% desired_b=%d\n",
+    kProgram,
+    reason,
+    externalConnected ? "AC" : "Battery",
+    batteryPercent,
+    desiredBatteryMode
   );
   fflush(stderr);
 }
@@ -362,6 +389,23 @@ static bool run_pmset(const char *scope, int value) {
   return WIFEXITED(waitStatus) && WEXITSTATUS(waitStatus) == 0;
 }
 
+static bool should_skip_duplicate_apply(const char *reason, bool externalConnected, int batteryPercent, int desiredBatteryMode, int desiredACMode) {
+  if (!gHasRecentApply) {
+    return false;
+  }
+
+  if (desiredBatteryMode != gRecentDesiredBatteryMode || desiredACMode != gRecentDesiredACMode) {
+    return false;
+  }
+
+  if ((CFAbsoluteTimeGetCurrent() - gRecentApplyAt) >= gApplyCooldownSeconds) {
+    return false;
+  }
+
+  log_duplicate_skip(reason, batteryPercent, externalConnected, desiredBatteryMode);
+  return true;
+}
+
 static void compute_desired_modes(bool externalConnected, int batteryPercent, int *desiredBatteryMode, int *desiredACMode) {
   *desiredACMode = 0;
   *desiredBatteryMode = (externalConnected || batteryPercent > gThreshold) ? 0 : 1;
@@ -394,6 +438,10 @@ static void reconcile(const char *reason) {
     return;
   }
 
+  if (should_skip_duplicate_apply(reason, externalConnected, batteryPercent, desiredBatteryMode, desiredACMode)) {
+    return;
+  }
+
   bool ok = true;
   if (needsACChange) {
     ok = run_pmset("-c", desiredACMode) && ok;
@@ -404,6 +452,10 @@ static void reconcile(const char *reason) {
   }
 
   if (ok) {
+    gHasRecentApply = true;
+    gRecentDesiredBatteryMode = desiredBatteryMode;
+    gRecentDesiredACMode = desiredACMode;
+    gRecentApplyAt = CFAbsoluteTimeGetCurrent();
     log_correction(reason, batteryPercent, externalConnected, desiredBatteryMode, actualBatteryMode, actualACMode);
   } else {
     log_message("error", "failed to apply desired low power mode state");
@@ -547,6 +599,14 @@ static void load_configuration(void) {
 
   const char *debug = getenv("AUTO_LOW_POWER_DEBUG");
   gDebug = (debug != NULL && (strcmp(debug, "1") == 0 || strcasecmp(debug, "true") == 0));
+
+  const char *cooldown = getenv("AUTO_LOW_POWER_APPLY_COOLDOWN_SECONDS");
+  if (cooldown != NULL && cooldown[0] != '\0') {
+    double value = atof(cooldown);
+    if (value >= 0.0) {
+      gApplyCooldownSeconds = value;
+    }
+  }
 }
 
 int main(void) {

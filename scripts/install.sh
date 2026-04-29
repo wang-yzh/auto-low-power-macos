@@ -7,7 +7,7 @@ if [[ "${EUID}" -ne 0 ]]; then
   exit 1
 fi
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT_DIR="${AUTO_LOW_POWER_ROOT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 BUILD_DIR="${ROOT_DIR}/build"
 SRC_FILE="${ROOT_DIR}/src/auto_low_power_listener.c"
 TEMPLATE_PLIST="${ROOT_DIR}/launchd/io.github.autolowpower.macos.plist"
@@ -21,6 +21,7 @@ BUILD_PLIST="${BUILD_DIR}/${LABEL}.plist"
 
 THRESHOLD="${AUTO_LOW_POWER_THRESHOLD:-25}"
 DEBUG="${AUTO_LOW_POWER_DEBUG:-0}"
+COOLDOWN="${AUTO_LOW_POWER_APPLY_COOLDOWN_SECONDS:-3}"
 
 mkdir -p "${BUILD_DIR}"
 
@@ -30,6 +31,7 @@ clang -O2 -Wall -Wextra -framework CoreFoundation -framework IOKit \
 sed \
   -e "s|__THRESHOLD__|${THRESHOLD}|g" \
   -e "s|__DEBUG__|${DEBUG}|g" \
+  -e "s|__COOLDOWN__|${COOLDOWN}|g" \
   "${TEMPLATE_PLIST}" > "${BUILD_PLIST}"
 
 install -d -m 755 "${INSTALL_DIR}"

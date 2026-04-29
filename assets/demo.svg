@@ -1,0 +1,37 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="80" y1="40" x2="1120" y2="680" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8F3E8"/>
+      <stop offset="1" stop-color="#E8F1EA"/>
+    </linearGradient>
+    <linearGradient id="card" x1="180" y1="120" x2="990" y2="580" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#17312B"/>
+      <stop offset="1" stop-color="#0D1D1A"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" rx="32" fill="url(#bg)"/>
+  <rect x="90" y="80" width="1020" height="560" rx="28" fill="url(#card)"/>
+  <circle cx="140" cy="120" r="10" fill="#F46B45"/>
+  <circle cx="172" cy="120" r="10" fill="#F9B233"/>
+  <circle cx="204" cy="120" r="10" fill="#3FC06B"/>
+  <text x="240" y="128" fill="#D9E9E1" font-family="Menlo, Monaco, monospace" font-size="24">Auto Low Power for macOS</text>
+
+  <text x="135" y="190" fill="#7EDCA8" font-family="Menlo, Monaco, monospace" font-size="28">$ pmset -g batt</text>
+  <text x="135" y="232" fill="#F1F7F4" font-family="Menlo, Monaco, monospace" font-size="24">Now drawing from 'Battery Power'</text>
+  <text x="135" y="270" fill="#F1F7F4" font-family="Menlo, Monaco, monospace" font-size="24">-InternalBattery-0  24%; discharging; 1:52 remaining</text>
+
+  <text x="135" y="340" fill="#7EDCA8" font-family="Menlo, Monaco, monospace" font-size="28">$ tail -n 2 /var/log/io.github.autolowpower.macos.log</text>
+  <text x="135" y="382" fill="#8FC5FF" font-family="Menlo, Monaco, monospace" font-size="22">[auto-low-power-listener] info: corrected after property-change</text>
+  <text x="135" y="416" fill="#8FC5FF" font-family="Menlo, Monaco, monospace" font-size="22">source=Battery battery=24% battery_mode 0-&gt;1 ac_mode 0-&gt;0</text>
+
+  <rect x="730" y="190" width="300" height="240" rx="24" fill="#F2F8F4"/>
+  <text x="765" y="240" fill="#17312B" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="32" font-weight="700">Rule Set</text>
+  <text x="765" y="288" fill="#17312B" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="24">Battery ≤ 25%  → ON</text>
+  <text x="765" y="324" fill="#17312B" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="24">Battery &gt; 25%  → OFF</text>
+  <text x="765" y="360" fill="#17312B" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="24">AC connected   → OFF</text>
+  <text x="765" y="400" fill="#517566" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="20">Event-driven. No fixed polling loop.</text>
+
+  <text x="135" y="520" fill="#7EDCA8" font-family="Menlo, Monaco, monospace" font-size="28">$ launchctl print system/io.github.autolowpower.macos</text>
+  <text x="135" y="560" fill="#F1F7F4" font-family="Menlo, Monaco, monospace" font-size="22">state = running</text>
+  <text x="135" y="592" fill="#F1F7F4" font-family="Menlo, Monaco, monospace" font-size="22">AUTO_LOW_POWER_THRESHOLD =&gt; 25</text>
+</svg>

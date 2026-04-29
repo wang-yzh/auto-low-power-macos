@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-validate:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build listener
+        run: make build
+
+      - name: Validate launchd plist
+        run: plutil -lint launchd/io.github.autolowpower.macos.plist
+
+      - name: Check install script syntax
+        run: bash -n scripts/install.sh
+
+      - name: Check uninstall script syntax
+        run: bash -n scripts/uninstall.sh
+
+      - name: Check quick install script syntax
+        run: bash -n scripts/quick-install.sh
