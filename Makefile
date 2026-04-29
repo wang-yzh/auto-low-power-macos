@@ -14,16 +14,7 @@ build:
 
 package:
 	mkdir -p $(DIST_DIR)
-	rm -rf $(DIST_DIR)/auto-low-power-macos
-	mkdir -p $(DIST_DIR)/auto-low-power-macos
-	rsync -a \
-		--exclude .git \
-		--exclude build \
-		--exclude dist \
-		--exclude Formula \
-		./ $(DIST_DIR)/auto-low-power-macos/
-	tar -czf $(ARCHIVE) -C $(DIST_DIR) auto-low-power-macos
-	rm -rf $(DIST_DIR)/auto-low-power-macos
+	git archive --format=tar.gz --worktree-attributes --prefix=auto-low-power-macos/ -o $(ARCHIVE) HEAD
 
 clean:
 	rm -rf $(BUILD_DIR) $(DIST_DIR)

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2026-04-30
+
+### Changed
+
+- Made release packaging deterministic via `git archive` and `.gitattributes`.
+- Updated the Homebrew formula to point at the `v0.1.1` release asset.
+- Kept the one-click installer on the latest tagged release path.
+
 ## [0.1.0] - 2026-04-30
 
 ### Added
